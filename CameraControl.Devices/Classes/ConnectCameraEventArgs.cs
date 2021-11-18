@@ -29,42 +29,16 @@
 #region
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+using CameraControl.Devices.TransferProtocol;
 
 #endregion
 
-namespace CameraControl.Devices.Xml
+namespace CameraControl.Devices.Classes
 {
-    public class XmlEventDescriptor
+    public delegate void CameraConnectedEventHandler(object sender, DisconnectCameraEventArgs eventArgs);
+
+    public class ConnectCameraEventArgs : EventArgs
     {
-        [XmlAttribute]
-        public uint Code { get; set; }
-
-        [XmlAttribute]
-        public string Name { get; set; }
-
-        [XmlAttribute]
-        public string Description { get; set; }
-
-        private string _hexCode;
-
-        [XmlAttribute]
-        public string HexCode
-        {
-            get
-            {
-                _hexCode = Code.ToString("X");
-                return _hexCode;
-            }
-            set { _hexCode = value; }
-        }
-
-        public override string ToString()
-        {
-            return HexCode + Name;
-        }
+        public ITransferProtocol StillImageDevice { get; set; }
     }
 }

@@ -492,27 +492,19 @@ namespace CameraControl.Devices
         public void OnCameraDisconnected(object sender, DisconnectCameraEventArgs eventHandler)
         {
             if (CameraDisconnected != null)
-            {
                 CameraDisconnected(sender, eventHandler);
-            }
         }
 
         public event PhotoCapturedEventHandler PhotoCaptured;
         public event EventHandler CaptureCompleted;
         public event CameraDisconnectedEventHandler CameraDisconnected;
-        public event CameraDeviceManager.CameraConnectedEventHandler CameraInitDone;
+        public event CameraConnectedEventHandler CameraConnected;
+        public event CameraInitDoneEventHandler CameraInitDone;
 
-        public void OnCameraInitDone()
+        public void OnCameraInitDone(object sender, CameraInitDoneEventArgs eventHandler)
         {
-            try
-            {
-                CameraDeviceManager.CameraConnectedEventHandler handler = CameraInitDone;
-                if (handler != null) handler(this);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("OnCameraInitDone", ex);
-            }
+             if (CameraInitDone != null)
+                CameraInitDone(sender, eventHandler);
         }
 
         private AsyncObservableCollection<PropertyValue<long>> _advancedProperties;

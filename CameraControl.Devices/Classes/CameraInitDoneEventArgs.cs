@@ -1,4 +1,4 @@
-#region Licence
+﻿#region Licence
 
 // Distributed under MIT License
 // ===========================================================
@@ -28,30 +28,17 @@
 
 #region
 
-using CameraControl.Devices.Classes;
+using System;
+using CameraControl.Devices.TransferProtocol;
 
 #endregion
 
-namespace CameraControl.Devices.Nikon
+namespace CameraControl.Devices.Classes
 {
-    public class NikonD7000 : NikonBase
+    public delegate void CameraInitDoneEventHandler(object sender, CameraInitDoneEventArgs eventArgs);
+
+    public class CameraInitDoneEventArgs : EventArgs
     {
-        public override bool Init(DeviceDescriptor deviceDescriptor)
-        {
-            bool res = base.Init(deviceDescriptor);
-            Capabilities.Clear();
-            Capabilities.Add(CapabilityEnum.LiveView);
-            Capabilities.Add(CapabilityEnum.RecordMovie);
-            Capabilities.Add(CapabilityEnum.CaptureInRam);
-            Capabilities.Add(CapabilityEnum.CaptureNoAf);
-            return res;
-        }
-
-        public override void StartLiveView()
-        {
-            base.StartLiveView();
-            //SetProperty(CONST_CMD_SetDevicePropValue, new[] {(byte) 0}, CONST_PROP_AfModeAtLiveView );
-        }
-
+        public ITransferProtocol StillImageDevice { get; set; }
     }
 }

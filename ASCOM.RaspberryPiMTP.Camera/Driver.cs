@@ -32,7 +32,6 @@ using CameraControl.Devices.TransferProtocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -88,7 +87,7 @@ namespace ASCOM.RaspberryPiMTP
         /// Private variable to hold an ASCOM AstroUtilities object to provide the Range method
         /// </summary>
         private AstroUtils astroUtilities;
-        private CameraDeviceManager DeviceManager;
+        //private CameraDeviceManager DeviceManager;
 
         /// <summary>
         /// Variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
@@ -104,6 +103,8 @@ namespace ASCOM.RaspberryPiMTP
         private bool _fastReadout = false;
         private CameraStates _cameraState = CameraStates.cameraIdle;
         private SensorType _sensorType = SensorType.RGGB;
+
+        RpiMTPCamera cameraDevice;
 
         private ArrayList _gains = new ArrayList()
             {"100", "200", "300", "400", "500", "600", "700", "800", "900", "1000", "1100", "1200", "1300", "1400", "1500", "1600", "3200", "4800", "6400"};
@@ -126,15 +127,12 @@ namespace ASCOM.RaspberryPiMTP
 
             //TODO: separate out into its own method so we can reconnect if necessary
             // Initialize CameraDeviceManager
-            DeviceManager = new CameraDeviceManager();
+            //DeviceManager = new CameraDeviceManager();
 
             // Tell it about the Rpi Camera
-            DeviceManager.CustomDeviceClass.Add("Rpi Camera", typeof(RpiMTPCamera));
+            //DeviceManager.CustomDeviceClass.Add("Rpi Camera", typeof(RpiMTPCamera));
 
-            // Callbacks
-            DeviceManager.PhotoCaptured += DeviceManager_PhotoCaptured;
-            //DeviceManager.CameraConnected += DeviceManager_CameraConnected;
-            //DeviceManager.CameraDisconnected += DeviceManager_CameraDisconnected;
+
 
             // Image Processor
             _imageDataProcessor = new ImageDataProcessor();
@@ -204,7 +202,7 @@ namespace ASCOM.RaspberryPiMTP
             cameraImageArray = _imageDataProcessor.CutArray(cameraImageArray, StartX, StartY, NumX, NumY, CameraXSize / BinX, CameraYSize / BinY);
         }
 
-        void DeviceManager_PhotoCaptured(object sender, PhotoCapturedEventArgs eventArgs)
+        void PhotoCapturedEventHandler(object sender, PhotoCapturedEventArgs eventArgs)
         {
             // to prevent UI freeze start the transfer process in a new thread
             Thread thread = new Thread(PhotoCaptured);
@@ -332,7 +330,6 @@ namespace ASCOM.RaspberryPiMTP
                     found = true;
                     portableDevice.ConnectToDevice(driverID, version.MajorRevision, version.MinorRevision);
 
-                    ICameraDevice cameraDevice;
                     DeviceDescriptor descriptor = new DeviceDescriptor { WpdId = portableDevice.DeviceId };
                     //cameraDevice = (ICameraDevice)Activator.CreateInstance(typeof(RpiMTPCamera));
                     cameraDevice = new RpiMTPCamera();
@@ -349,7 +346,12 @@ namespace ASCOM.RaspberryPiMTP
                         cameraDevice.SerialNumber = StaticHelper.GetSerial(portableDevice.DeviceId);
                     descriptor.CameraDevice = cameraDevice;
 
-                    DeviceManager.AddDevice(descriptor);
+                    // Callbacks
+                    cameraDevice.PhotoCaptured += PhotoCapturedEventHandler;
+                    //DeviceManager.CameraConnected += DeviceManager_CameraConnected;
+                    //DeviceManager.CameraDisconnected += DeviceManager_CameraDisconnected;
+
+                    //DeviceManager.AddDevice(descriptor);
                 }
             }
             catch (Exception exception)
@@ -393,7 +395,7 @@ namespace ASCOM.RaspberryPiMTP
                 else
                 {
                     LogMessage("Connected", "Disconnecting from camera");
-                    DeviceManager.CloseAll();
+                    cameraDevice.Close();
                     _connectedState = false;
                 }
             }
@@ -1035,12 +1037,11 @@ namespace ASCOM.RaspberryPiMTP
             if (cameraStartY > ccdHeight) throw new InvalidValueException("StartExposure", cameraStartY.ToString(), ccdHeight.ToString());
 
             // Send setup commands
-            ICameraDevice camera = DeviceManager.SelectedCameraDevice;
-            camera.Mode.SetValue("M");
-            camera.CompressionSetting.SetValue(_imageFormat);            
+            cameraDevice.Mode.SetValue("M");
+            cameraDevice.CompressionSetting.SetValue(_imageFormat);            
 
             // Low level hackery so we can set the exposure time explicitly
-            ((BaseMTPCamera)camera).SetProperty(RpiMTPCamera.CONST_CMD_SetDevicePropValue, BitConverter.GetBytes(((long)Duration * 10000)),
+            cameraDevice.SetProperty(RpiMTPCamera.CONST_CMD_SetDevicePropValue, BitConverter.GetBytes(((long)Duration * 10000)),
                                     RpiMTPCamera.CONST_PROP_ExposureTime);
 
             // Low level hackery so we can set the binned image size correctly
@@ -1051,10 +1052,10 @@ namespace ASCOM.RaspberryPiMTP
             List<byte> vals = new List<byte>() { 10 };
             vals.AddRange(Encoding.Unicode.GetBytes(s));
             vals.Add(0x00);
-            ((BaseMTPCamera)camera).SetProperty(RpiMTPCamera.CONST_CMD_SetDevicePropValue, vals.ToArray(), RpiMTPCamera.CONST_PROP_ImageSize);
+            cameraDevice.SetProperty(RpiMTPCamera.CONST_CMD_SetDevicePropValue, vals.ToArray(), RpiMTPCamera.CONST_PROP_ImageSize);
 
 
-            camera.IsoNumber.SetValue(Convert.ToInt16((String)_gains[_currentGain]));
+            cameraDevice.IsoNumber.SetValue(Convert.ToInt16((String)_gains[_currentGain]));
 
             tl.LogMessage("StartExposure", "ss=" + ((long)Duration * 10000).ToString() + ", format=" + _imageFormat.ToString() + ", iso = " + Convert.ToInt16((String)_gains[_currentGain]));
 
@@ -1062,7 +1063,7 @@ namespace ASCOM.RaspberryPiMTP
 
             try
             {
-                camera.CapturePhoto();
+                cameraDevice.CapturePhoto();
                 cameraLastExposureDuration = Duration;
                 exposureStart = DateTime.Now;
 

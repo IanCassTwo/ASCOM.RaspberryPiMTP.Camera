@@ -38,7 +38,6 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using CameraControl.Devices.Classes;
-using CameraControl.Devices.Xml;
 using PortableDeviceLib;
 using PortableDeviceLib.Model;
 using Timer = System.Timers.Timer;
@@ -48,7 +47,7 @@ using Timer = System.Timers.Timer;
 namespace CameraControl.Devices.Custom
 {
     /// <summary>
-    /// Base Nikon driver
+    /// RpiMTPCamera based on Base Nikon driver
     /// </summary>
     public class RpiMTPCamera : BaseMTPCamera
     {
@@ -369,50 +368,6 @@ namespace CameraControl.Devices.Custom
             //_timer.Start();
         }
 
-        public PictureControl GetPictureControl(byte slotnum)
-        {
-            PictureControl control = new PictureControl();
-            MTPDataResponse result = ExecuteReadDataEx(0x90CC, slotnum, 0);
-            if (result.Data != null && result.Data.Length > 30)
-            {
-                control.IsLoaded = true;
-                control.ItemNumber = slotnum;
-                control.Monocrome = result.Data[1] == 1;
-                control.CustomFlag = result.Data[2];
-                string name = Encoding.ASCII.GetString(result.Data, 3, 20);
-                control.RegistrationName = name.Contains("\0") ? name.Split('\0')[0] : name;
-                if (!control.Monocrome)
-                {
-                    control.QuickAdjustFlag = result.Data[23];
-                    control.QuickAdjust = (sbyte) result.Data[24];
-                    control.Saturation = (sbyte) result.Data[25];
-                    control.Hue = (sbyte) result.Data[26];
-                }
-                else
-                {
-                    control.FilterEffects = result.Data[23];
-                    control.Toning = result.Data[24];
-                    control.ToningDensity = result.Data[25];
-                    //control.Hue = result.Data[27];
-                }
-                control.Sharpening = (sbyte) result.Data[27];
-                control.Contrast = (sbyte) result.Data[28];
-                control.Brightness = (sbyte) result.Data[29];
-                control.CustomCurveFlag = result.Data[30];
-                if (control.CustomCurveFlag == 1)
-                    result.Data.CopyTo(control.CustomCurveData, 31);
-            }
-            else
-            {
-                return null;
-            }
-            return control;
-        }
-
-        public void SetPictureControl(PictureControl control)
-        {
-        }
-
         protected virtual PropertyValue<long> InitHostMode()
         {
             var res = new PropertyValue<long>() { Name = "Lock", IsEnabled = true };
@@ -490,7 +445,7 @@ namespace CameraControl.Devices.Custom
                 ReInitShutterSpeed();
                 ReadDeviceProperties(CONST_PROP_LiveViewStatus);
                 _timer.Start();
-                OnCameraInitDone();
+                OnCameraInitDone(this, new CameraInitDoneEventArgs {});
                 
             }
             catch (Exception exception)
@@ -531,20 +486,7 @@ namespace CameraControl.Devices.Custom
             //AdvancedProperties.Add(LensSort());
             //AdvancedProperties.Add(InitHostMode());
             
-            try
-            {
-                var deviceinfo = LoadDeviceData(ExecuteReadDataEx(0x1001));
-                foreach (PropertyValue<long> value in AdvancedProperties)
-                {
-                    if (!deviceinfo.PropertyExist(value.Code))
-                        value.Available = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Unable to check advanced proprties", ex);
-            }
-            
+           
             foreach (PropertyValue<long> value in AdvancedProperties)
             {
                 ReadDeviceProperties(value.Code);
@@ -890,43 +832,6 @@ namespace CameraControl.Devices.Custom
             res.ReloadValues();
             res.ValueChanged +=
                 (sender, key, val) => SetProperty(CONST_CMD_SetDevicePropValue, BitConverter.GetBytes(val), res.Code);
-            return res;
-        }
-
-        protected virtual PropertyValue<long> InitPictControl()
-        {
-            var res = new PropertyValue<long>()
-            {
-                Name = "Picture control",
-                IsEnabled = true,
-                Code = CONST_PROP_ActivePicCtrlItem,
-                SubType = typeof(UInt16)
-            };
-            res.AddValues("Standard", 1);
-            res.AddValues("Neutral", 2);
-            res.AddValues("Vivid", 3);
-            res.AddValues("Monochrome", 4);
-            res.AddValues("Portrait", 5);
-            res.AddValues("Landscape", 6);
-            res.ValueChanged +=
-                (sender, key, val) => SetProperty(CONST_CMD_SetDevicePropValue, BitConverter.GetBytes(val), res.Code);
-
-            try
-            {
-                for (byte i = 201; i < 210; i++)
-                {
-                    PictureControl control = GetPictureControl(i);
-                    if (control != null && (control.IsLoaded && !string.IsNullOrWhiteSpace(control.RegistrationName)))
-                        res.AddValues(control.RegistrationName, i);
-                    else
-                        res.AddValues("Custom picture control " + (i - 200), i);
-                }
-            }
-            catch (Exception)
-            {
-                
-            }
-            res.ReloadValues();
             return res;
         }
 
