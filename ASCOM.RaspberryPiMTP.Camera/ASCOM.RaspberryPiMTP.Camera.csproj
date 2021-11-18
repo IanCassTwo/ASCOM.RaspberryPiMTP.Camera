@@ -156,16 +156,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\digiCamControl\CameraControl.Devices\CameraControl.Devices.csproj">
-      <Project>{e8572d8b-c987-4d20-bd88-1f8925a64a82}</Project>
-      <Name>CameraControl.Devices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\digiCamControl\PortableDeviceLib\PortableDeviceLib.csproj">
-      <Project>{e9f048c1-c6a0-4ccd-be57-4e76a7f8b32d}</Project>
-      <Name>PortableDeviceLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <COMReference Include="PortableDeviceApiLib">
       <Guid>{1F001332-1A57-4934-BE31-AFFC99F4EE0A}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -185,7 +175,16 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CameraControl.Devices\CameraControl.Devices.csproj">
+      <Project>{e8572d8b-c987-4d20-bd88-1f8925a64a82}</Project>
+      <Name>CameraControl.Devices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PortableDeviceLib\PortableDeviceLib.csproj">
+      <Project>{e9f048c1-c6a0-4ccd-be57-4e76a7f8b32d}</Project>
+      <Name>PortableDeviceLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

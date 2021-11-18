@@ -281,9 +281,8 @@
       <Name>Canon.Eos.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\PortableDeviceLib\PortableDeviceLib.csproj">
-      <Project>{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}</Project>
+      <Project>{e9f048c1-c6a0-4ccd-be57-4e76a7f8b32d}</Project>
       <Name>PortableDeviceLib</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

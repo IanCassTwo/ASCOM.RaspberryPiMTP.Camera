@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASCOM.RaspberryPiMTP.Camera", "ASCOM.RaspberryPiMTP.Camera\ASCOM.RaspberryPiMTP.Camera.csproj", "{64308775-BD4A-469C-BCAB-3ED830B811AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82} = {E8572D8B-C987-4D20-BD88-1F8925A64A82}
+		{F809DBB6-E0E8-47A8-92ED-C24575576A5D} = {F809DBB6-E0E8-47A8-92ED-C24575576A5D}
+		{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D} = {E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Application", "Test Application\Test Application.csproj", "{D5207217-61C7-4E94-8097-91DBACE57D2A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -12,11 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Application", "Test Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C41E793B-BA1C-42B6-B71A-C8F9DBC5322D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraControl.Devices", "..\digiCamControl\CameraControl.Devices\CameraControl.Devices.csproj", "{E8572D8B-C987-4D20-BD88-1F8925A64A82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableDeviceLib", "PortableDeviceLib\PortableDeviceLib.csproj", "{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableDeviceLib", "..\digiCamControl\PortableDeviceLib\PortableDeviceLib.csproj", "{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Canon.Eos.Framework", "Canon.Eos.Framework\Canon.Eos.Framework.csproj", "{F809DBB6-E0E8-47A8-92ED-C24575576A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Canon.Eos.Framework", "..\digiCamControl\Canon.Eos.Framework\Canon.Eos.Framework.csproj", "{F809DBB6-E0E8-47A8-92ED-C24575576A5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraControl.Devices", "CameraControl.Devices\CameraControl.Devices.csproj", "{E8572D8B-C987-4D20-BD88-1F8925A64A82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,24 +69,6 @@ Global
 		{D5207217-61C7-4E94-8097-91DBACE57D2A}.Release|x64.ActiveCfg = Release|x86
 		{D5207217-61C7-4E94-8097-91DBACE57D2A}.Release|x86.ActiveCfg = Release|x86
 		{D5207217-61C7-4E94-8097-91DBACE57D2A}.Release|x86.Build.0 = Release|x86
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|Any CPU.ActiveCfg = Capture.Workflow|Any CPU
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|Any CPU.Build.0 = Capture.Workflow|Any CPU
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x64.ActiveCfg = Capture.Workflow|x64
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x64.Build.0 = Capture.Workflow|x64
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x86.ActiveCfg = Capture.Workflow|x86
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x86.Build.0 = Capture.Workflow|x86
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x64.ActiveCfg = Debug|x64
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x64.Build.0 = Debug|x64
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x86.ActiveCfg = Debug|x86
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x86.Build.0 = Debug|x86
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x64.ActiveCfg = Release|x64
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x64.Build.0 = Release|x64
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x86.ActiveCfg = Release|x86
-		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x86.Build.0 = Release|x86
 		{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}.Capture.Workflow|Any CPU.ActiveCfg = Capture.Workflow|Any CPU
 		{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}.Capture.Workflow|Any CPU.Build.0 = Capture.Workflow|Any CPU
 		{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}.Capture.Workflow|x64.ActiveCfg = Capture.Workflow|x64
@@ -118,6 +105,24 @@ Global
 		{F809DBB6-E0E8-47A8-92ED-C24575576A5D}.Release|x64.Build.0 = Release|x64
 		{F809DBB6-E0E8-47A8-92ED-C24575576A5D}.Release|x86.ActiveCfg = Release|x86
 		{F809DBB6-E0E8-47A8-92ED-C24575576A5D}.Release|x86.Build.0 = Release|x86
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|Any CPU.ActiveCfg = Capture.Workflow|Any CPU
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|Any CPU.Build.0 = Capture.Workflow|Any CPU
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x64.ActiveCfg = Capture.Workflow|x64
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x64.Build.0 = Capture.Workflow|x64
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x86.ActiveCfg = Capture.Workflow|x86
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Capture.Workflow|x86.Build.0 = Capture.Workflow|x86
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x64.ActiveCfg = Debug|x64
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x64.Build.0 = Debug|x64
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x86.ActiveCfg = Debug|x86
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Debug|x86.Build.0 = Debug|x86
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x64.ActiveCfg = Release|x64
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x64.Build.0 = Release|x64
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x86.ActiveCfg = Release|x86
+		{E8572D8B-C987-4D20-BD88-1F8925A64A82}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
